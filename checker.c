@@ -165,4 +165,10 @@ int		main(int argc, char **argv)
 {
 	t_main main;
 	init_main(&main);
+	
+	while ((get_next_line(STDIN_FILENO, &main.op)))
+	{	
+		printf("[%s]", main.op);
+		free(main.op);
+	}
 }

@@ -1,5 +1,6 @@
 #ifndef PUSH_SWAP_H
 #include "./libft/libft.h"
+#include "./gnl_working/get_next_line.h"
 #include <stdio.h>
 #define A 0
 #define B 1
@@ -13,7 +14,6 @@ typedef struct	s_stack
 typedef struct	s_main
 {	
 	t_stack		*stack[2];
-	int			argc;
-	char		**argv;
+	char		*op;
 }				t_main;
 #endif
