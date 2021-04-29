@@ -73,6 +73,7 @@ int		s(t_stack **stack)
 	*stack = (*stack)->n;
 	tmp->n = (*stack)->n;
 	(*stack)->n = tmp;
+	printf("s\n");
 	return (1);
 }
 
@@ -86,6 +87,8 @@ int		p(t_stack **src, t_stack **dst)
 	to_free = *src;
 	*src = (*src)->n;
 	free(to_free);
+	printf("p\n");
+	return (1);
 }
 
 int		r(t_stack **stack)
@@ -108,6 +111,7 @@ int		r(t_stack **stack)
 	last->n = *stack;
 	(*stack)->n = NULL;
 	*stack = prevlast;
+	printf("r\n");
 }
 
 int		rev_r(t_stack **stack)
@@ -130,6 +134,7 @@ int		rev_r(t_stack **stack)
 	prevlast->n = NULL;
 	last->n = *stack;
 	*stack = last;
+	printf("rev_r\n");
 }
 
 int		rr(t_stack **a, t_stack **b)
@@ -139,6 +144,7 @@ int		rr(t_stack **a, t_stack **b)
 	ret = 0;
 	ret += r(a);
 	ret += r(b);
+	printf("rr\n");
 	return (ret);
 }
 
@@ -149,6 +155,7 @@ int		rrr(t_stack **a, t_stack**b)
 	ret = 0;
 	ret += rev_r(a);
 	ret += rev_r(b);
+	printf("rrr\n");
 	return (ret);
 }
 
