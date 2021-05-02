@@ -107,7 +107,7 @@ int		check_nonvar_format(int **stacka, int *argc, char **argv, int mode)
 		if (!number_is_valid(argv[i]))
 			return (0);
 		to_insert = ft_atoi(argv[i]);
-		if (i > 1 && is_present(nb, i - 1, to_insert))
+		if (is_present(nb, i - mode, to_insert))
 			return (0);
 		if (!str_diff(ft_itoa(to_insert), argv[i]))
 			return (0);

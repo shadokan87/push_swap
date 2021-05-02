@@ -123,6 +123,21 @@ t_stack		*get_last(t_stack *stack)
 	return (last);
 }
 
+int		get_loc(t_stack **a, int i)
+{
+	int loc;
+	t_stack *ptr;
+
+	loc = 0;
+	ptr = *a;
+	while (ptr->index != i)
+	{
+		loc++;
+		ptr = ptr->n;
+	}
+	return (loc);
+}
+
 int		is_sorted(t_stack *stack)
 {
 	t_stack *check;
@@ -181,6 +196,29 @@ int		get_mid(int *stacka, int *index)
 	return (i);
 }
 
+// 1 2 3 4 5 6 7 8 9 10 11 12
+
+int		put_to_b2(t_stack *(*stack)[2], int mid, int mid_index)
+{
+	int i;
+	t_stack *last;
+
+	i = 0;
+	//last = get_last((*stack)[A]);
+		last = get_last((*stack)[A]);
+	while (i != mid_index - 1)
+	{
+		if ((*stack)[A]->elem < mid)
+		{
+			p((stack)[A], (stack)[B]);
+			i++;
+		}
+		else
+			r((stack)[A]);
+	}
+	return (1);
+}
+
 int		*stack_to_int(t_stack *stack)
 {
 	int *new;
@@ -200,64 +238,27 @@ int		*stack_to_int(t_stack *stack)
 	return (new);
 }
 
-int		get_mid_index(int *stacka, int len)
-{
-	int i;
-	
-	i = 0;
-	while (len - i != (len / 2))
-		i++;
-	return (i);
-}
-
 int		put_to_b(t_stack *(*stack)[2], int *stacka)
 {
-	int i;
+	int mid_index;
 	int mid;
-	t_stack *last;
 	
-	i = 0;
-	if (stack_len((*stack)[A]) == 3)
-		return (0);
-	mid = stack_len((*stack)[A]) / 2;
-	while (i != mid)
-	{
-			if ((*stack)[A]->elem < stacka[mid])
-			{
-				p((stack)[A], (stack[B]));
-				i++;
-			}
-			else
-			{
-				//last = get_last((*stack)[A]);
-				//(last->elem < stacka[mid]) ? (rev_r((stack)[A])) : r((stack)[A]);
-				r((stack)[A]);
-			}
-	}
+	mid_index = (stack_len((*stack)[A]) / 2) + 1;
+	mid = stacka[mid_index]
 }
 
 void	init_stack_sort(t_stack *(*stack)[2], int *stacka, int len)
 {
 	int i;
 
-	push((stack)[A], 1);
-	printf("%d", (*stack)[A]->elem);
-	exit (0);
-	i = -1;
-	while (++i < len)
-		push((stack)[A], stacka[i]);
-	quicksort(stacka, 0, len - 1);
-	/*
-	while (put_to_b(stack, stacka))
+	i = len - 1;
+	while (i >= 0)
 	{
-		free(stacka);
-		stacka = stack_to_int((*stack)[A]);	
-		quicksort(stacka, 0, stack_len((*stack)[A]));
+		push((stack)[A], stacka[i]);
+		i--;
 	}
-	printf("%d", stack_len((*stack)[B]));
-	*/
-	p((stack)[A], (stack)[B]);
-	push((stack)[A], 1);
+	quicksort(stacka, 0, len);
+	put_to_b(stack, stacka);
 }
 
 int	main(int argc, char **argv)

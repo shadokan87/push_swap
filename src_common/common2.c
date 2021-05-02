@@ -93,24 +93,16 @@ int		p(t_stack **src, t_stack **dst)
 
 int		r(t_stack **stack)
 {
-	int len;
 	t_stack *last;
-	t_stack *prevlast;
+	t_stack *ptr;
 	
-	len = stack_len(*stack);
-	if (!(*stack && len > 1))
-		return (0);
-	if (len == 2)
-		return (s(stack));
 	last = *stack;
-	prevlast = *stack;
 	while (last->n)
 		last = last->n;
-	while (prevlast->n->n)
-		prevlast = prevlast->n;
-	last->n = *stack;
+	ptr = (*stack)->n;
 	(*stack)->n = NULL;
-	*stack = prevlast;
+	last->n = *stack;
+	*stack = ptr;
 	printf("r\n");
 }
 
