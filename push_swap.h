@@ -9,12 +9,13 @@
 typedef struct	s_stack
 {
 	int elem;
-	int index;
 	struct s_stack *n;
 }				t_stack;
 typedef struct	s_main
 {	
-	t_stack		*stack[2];
+	t_stack		*stacka;
+	t_stack		*stackb;
+	t_stack		*chunks;
 	char		*op;
 }				t_main;
 int	twodlen(char **str);

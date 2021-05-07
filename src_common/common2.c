@@ -156,11 +156,6 @@ int		listen_op(t_main *main)
 	return (1);
 }
 
-void	init_main(t_main *main)
-{
-	main->stack[A] = NULL;
-	main->stack[B] = NULL;
-}
 int		is_op(char *op)
 {
 	int i;

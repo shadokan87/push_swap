@@ -115,7 +115,7 @@ int		get_mid(int *stacka, int *index)
 	return (i);
 }
 
-int		*stack_to_int(t_stack *stack, int len)
+int		*stack_to_int(t_stack *stack)
 {
 	int *new;
 	int i;
@@ -123,11 +123,9 @@ int		*stack_to_int(t_stack *stack, int len)
 
 	i = 0;
 	ptr = stack;
-	if (!(new = malloc(sizeof(int) * len)))
+	if (!(new = malloc(sizeof(int) * stack_len(stack))))
 		return (0);
-	if (len == 0)
-		return (0);
-	while (ptr &&i < len)
+	while (ptr)
 	{
 		new[i] = ptr->elem;
 		i++;
@@ -212,11 +210,39 @@ int		put_to_b(t_main *main, int *stacka)
 				i++;
 			}
 			else
-				r(&main->stacka);
+			{
+				last = get_last(main->stacka);
+				if (main->stacka->n->elem >= stacka[mid] &&
+				last->elem < stacka[mid])
+					rev_r(&main->stacka);
+				else
+					r(&main->stacka);
+			}
 	}
 	if (end == 3)
 		return (check_last(main));
 	return (1);
+}
+
+int		*stack_to_int2(t_stack **stack, int end)
+{
+	t_stack	*ptr;
+	t_stack *ptr2;
+	int		i;
+	int		*ret;
+	
+	i = -1;
+	ptr = *stack;
+	printf("//%d", end);
+	if (end == 1)
+		return (stack_to_int(*stack));
+	while (++i <= end)
+		ptr = ptr->n;
+	ptr2 = ptr->n;
+	ptr->n = NULL;
+	ret = stack_to_int(*stack);
+	ptr->n = ptr2;
+	return (ret);
 }
 
 int		move_chunk(t_main *main)
@@ -238,6 +264,7 @@ int		get_to_put(int *stacka, int len, int mid)
 	ret = 0;
 	while (i < len)
 	{
+		printf("[%d]", stacka[i]);
 		if (i > mid)
 			ret++;
 		i++;
@@ -252,136 +279,24 @@ int		case_one(t_main *main)
 	return (1);
 }
 
-int		case_two(t_main *main)
-{
-	int i;
-
-	i = -1;
-	if (main->stackb->elem < main->stackb->n->elem)
-		s(&main->stackb);
-	while (++i < 2)
-		p(&main->stackb, &main->stacka);
-	move_chunk(main);
-	return (1);
-}
-
-int		case_sorted2(t_main *main)
-{
-	while (main->chunks->elem)
-	{
-		p(&main->stackb, &main->stacka);
-		main->chunks->elem--;
-	}
-	move_chunk(main);
-	return (1);
-}
-
-int		case_sorted(t_main *main)
-{
-	int i;
-	int y;
-	t_stack *ptr;
-
-	i = 0;
-	y = -1;
-	ptr = main->stackb;
-	while (i < main->chunks->elem)
-	{
-		if (y != -1 && ptr->elem > y)
-			return (0);
-		y = ptr->elem;
-		i++;
-		ptr = ptr->n;
-	}
-	return (case_sorted2(main));
-}
-
 int		check_cases(t_main *main)
 {
 	if (main->chunks->elem == 1)
 		return (case_one(main));
-	else if (main->chunks->elem == 2)
-		return (case_two(main));
-	else if (case_sorted(main))
-		return (1);
-	return (0);
 }
 
-void	print_stacka(int *stacka, int len)
-{
-	int i;
-
-	i = 0;
-	while (i < len)
-	{
-		printf("[%d]", stacka[i]);
-		i++;
-	}
-}
-
-int	put_to_a(t_main *main, int *stacka)
+int		put_to_a(t_main *main, int *stacka)
 {
 	int mid;
 	int max;
-	int count_r;
-
+	
 	if (check_cases(main))
-		return (0);
-	count_r = 0;
+		return (1);
 	mid = main->chunks->elem / 2;
 	max = get_to_put(stacka, main->chunks->elem, mid);
-	while (max)
-	{
-		if (main->stackb->elem > stacka[mid])
-		{
-			/*
-			if (main->stackb->elem == 4)
-			{
-				print_stack(main->stackb);
-				printf("[//%d //%d", max, stacka[mid]);
-				exit (0);
-			}
-			*/
-			p(&main->stackb, &main->stacka);
-			main->chunks->elem--;
-			max--;
-		}
-		else
-		{
-			r(&main->stackb);
-			count_r++;
-		}
-	}
-	if (main->chunks->elem == 0)
-		move_chunk(main);
-	while (stack_len(main->chunks) != 1 && count_r)
-	{
-		rev_r(&main->stackb);
-		count_r--;
-	}
-	return (1);
 }
 
-int	stack_sort2(t_main *main, int *stacka)
-{
-	int i;
-
-	i = 0;
-	while (main->chunks)
-	{
-		free(stacka);
-		stacka = stack_to_int(main->stackb, main->chunks->elem);
-		quicksort(stacka, 0, main->chunks->elem - 1);
-		put_to_a(main, stacka);
-		i++;
-	}
-	print_stack(main->stacka);
-	printf("%s", is_sorted(main->stacka) ? "OK\n" : "KO\n");
-	//print_stack(main->stacka);
-	return (1);	
-}
-
-int	init_stack_sort(t_main *main, int *stacka, int len)
+void	init_stack_sort(t_main *main, int *stacka, int len)
 {
 	int i;
 
@@ -395,10 +310,14 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 	while (!is_sorted(main->stacka) && put_to_b(main, stacka))
 	{
 		free(stacka);
-		stacka = stack_to_int(main->stacka, stack_len(main->stacka));
+		stacka = stack_to_int2(&main->stackb, main->chunks->elem);
 		quicksort(stacka, 0, stack_len(main->stacka) - 1);
 	}
-	return (stack_sort2(main, stacka));
+	i = 0;
+
+	stacka = stack_to_int2(&main->stackb, main->chunks->elem);
+	print_stack(main->stacka);
+	//print_stack(main->stackb);
 }
 
 int	main(int argc, char **argv)
