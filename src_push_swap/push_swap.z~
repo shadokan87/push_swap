@@ -9,43 +9,6 @@ typedef struct s_solve
 	int swap;
 }				t_solve;
 
-static int str_diff(char *s1, char *s2)
-{
-	int i;
-
-	i = 0;
-	if (ft_strlen(s1) != ft_strlen(s2))
-		return (0);
-	while (s1[i] && s1[i] == s2[i])
-		i++;
-	if (s1[i])
-		return (0);
-	return (1);
-}
-
-void	send_op(t_main *main, char *op)
-{
-	if (str_diff(op, "pa"))
-		p(&main->stackb, &main->stackb);
-	else if (str_diff(op, "pb"))
-		p(&main->stacka, &main->stackb);
-	else if (str_diff(op, "sa"))
-		s(&main->stacka);
-	else if (str_diff(op, "sb"))
-		s(&main->stackb);
-	else if (str_diff(op, "ra"))
-		r(&main->stacka);
-	else if (str_diff(op, "rb"))
-		r(&main->stackb);
-	else if (str_diff(op, "rra"))
-		rev_r(&main->stacka);
-	else if (str_diff(op, "rrb"))
-		rev_r(&main->stackb);
-	else
-		return ;
-	printf("%s\n", op);
-}
-
 int	*get_numbers(char **argv)
 {
 	int i;
@@ -273,16 +236,16 @@ int	to_b(t_main *main, int *stacka)
 	{
 		if (main->stacka->elem < stacka[mid])
 		{
-			send_op(main, "pb");
+			p(&main->stacka, &main->stackb);
 			max--;
 		}
 		else
 		{
 			last = get_last(main->stacka);
 			if (last->elem < stacka[mid])
-				send_op(main, "rra");
+				rev_r(&main->stacka);
 			else
-				send_op(main, "ra");
+				r(&main->stacka);
 		}
 	}
 	free(stacka);
@@ -400,102 +363,24 @@ void	print_chunk(t_main *main)
 	t_stack *ptr2;
 	int i;
 
-	ptr2 = main->stackb;
-	ptr = main->chunks;
+	i = 0;
+	ptr = main->stackb;
+	ptr2 = main->chunks;
 	while (ptr)
 	{
-		i = 0;
-		while (i < ptr->elem)
-		{
-			printf("[%d]\n", ptr2->elem);
-			i++;
+		if (i <= 0)
 			ptr2 = ptr2->n;
-		}
-		printf("\n\n");
+		i = main->chunks->elem;
+		printf("[%d]\n", ptr->elem);
 		ptr = ptr->n;
+		i--;
 	}
-}
-
-int	get_lloc(t_stack *stack, int to_find, int len)
-{
-	int i;
-	t_stack *ptr;
-
-	i = 0;
-	if (!stack)
-		return (-1);
-	ptr = stack;
-	while (ptr && i < len && ptr->elem != to_find)
-	{
-		i++;
-		ptr = ptr->n;
-	}
-	if (ptr->elem == to_find)
-		return (i);
-	else
-		return (-1);
-}
-
-int	get_path(t_stack *stack, t_main *main, int to_find)
-{
-	t_stack *ptr;
-	int ret;
-
-	ptr = stack;
-	if (ptr->n->elem == to_find)
-		return (1);	
-	ret = get_lloc(stack, to_find, main->chunks->elem);
-	if (ret == -1)
-		return (-1);
-	return (2);
-}
-
-int	mv_elem_top(t_stack **stack, int to_find)
-{
-	int count_r;
-
-	count_r = 0;
-	while ((*stack)->elem != to_find)
-	{
-			r(stack);
-			count_r++;
-
-	}
-	if (count_r)
-		return (1);
-	else
-		return (0);
-}
-
-int	check_cases(t_main *main)
-{
-	if (main->chunks->elem == 1)
-	{
-		p(&main->stackb, &main->stacka);
-		return (1);
-	}
-	else if (main->chunks->elem == 2)
-	{
-		if (main->stackb->elem < main->stackb->n->elem)
-			s(&main->stackb);
-		p(&main->stackb, &main->stacka);
-		p(&main->stackb, &main->stacka);
-		return (1);
-	}
-	return (0);
-}
-
-int	to_a2(t_main *main, int *stacka)
-{
-	return (1);
 }
 
 int	init_stack_sort(t_main *main, int *stacka, int len)
 {
 	int i;
-	int count_r;
-	int to_find;
-	
+
 	i = len - 1;
 	while (i >= 0)
 	{
@@ -504,32 +389,8 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 	}
 	quicksort(stacka, 0, len - 1);
 	to_b(main, stacka);
-	while (main->chunks)
-	{
-		while (main->chunks->elem)
-		{
-			count_r = 0;
-			stacka = stack_to_int(main->stackb, main->chunks->elem);
-			quicksort(stacka, 0, main->chunks->elem - 1);
-			to_find = stacka[main->chunks->elem - 1];
-			if (main->chunks->elem >= 2 && main->stackb->n->elem == to_find)
-				send_op(main, "sb");
-			while (main->stackb->elem != to_find)
-			{
-				send_op(main, "rb");
-				count_r++;
-			}
-			p(&main->stackb, &main->stacka);
-			main->chunks->elem--;
-			while (count_r && stack_len(main->stackb) > 1)
-			{	
-				//rev_r(&main->stackb);
-				send_op(main, "rrb");
-				count_r--;
-			}
-		}
-		move_chunk(main);
-	}
+	printf("\n\n");
+	print_chunk(main);
 	//print_both(main);
 }
 
