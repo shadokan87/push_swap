@@ -26,7 +26,7 @@ static int str_diff(char *s1, char *s2)
 void	send_op(t_main *main, char *op)
 {
 	if (str_diff(op, "pa"))
-		p(&main->stackb, &main->stackb);
+		p(&main->stackb, &main->stacka);
 	else if (str_diff(op, "pb"))
 		p(&main->stacka, &main->stackb);
 	else if (str_diff(op, "sa"))
@@ -41,8 +41,6 @@ void	send_op(t_main *main, char *op)
 		rev_r(&main->stacka);
 	else if (str_diff(op, "rrb"))
 		rev_r(&main->stackb);
-	else
-		return ;
 	printf("%s\n", op);
 }
 
@@ -63,6 +61,22 @@ int	*get_numbers(char **argv)
 		i++;
 	}
 	return (ret);
+}
+
+
+void	print_stack3(t_stack *stack, int len)
+{
+	t_stack *ptr;
+	int i;
+
+	i = 0;
+	ptr = stack;
+	while (ptr && i < len)
+	{
+		printf("[/%d]\n", ptr->elem);
+		ptr = ptr->n;
+		i++;
+	}
 }
 
 void	print_stack2(int *stack, int len)
@@ -343,9 +357,8 @@ int	to_b(t_main *main, int *stacka)
 	if (is_sorted(main->stacka))
 		return (0);
 	mid = stack_len(main->stacka) / 2;
-	while (mid > 20)
-		mid--;
 	max = get_max(stacka, stacka[mid]);
+	printf("max %d\n", max);
 	push(&main->chunks, max);
 	while (max)
 	{
@@ -559,6 +572,84 @@ int	to_a2(t_main *main, int *stacka)
 	return (1);
 }
 
+int	get_max3(t_main *main, int mid, int size)
+{
+	int i;
+	int count;
+
+	i = mid + 1;
+	count = 0;
+	while (i < size)
+	{
+		i++;
+		count++;
+	}
+	return (count);
+}
+
+int		move_small2(t_main *main, int *stacka, int mid)
+{
+	int count_r;
+
+	count_r = 0;
+	while (!(main->stacka->elem < stacka[mid]))
+	{
+		send_op(main, "ra");
+		count_r++;
+	}
+	return (count_r);
+}
+
+int	to_b_size(t_main *main, int size)
+{
+	int *stacka;
+	int mid;
+	int max;
+	int count_r;
+
+	count_r = 0;
+	stacka = stack_to_int(main->stacka, size);
+	quicksort(stacka, 0, size - 1);
+	print_stack2(stacka, size);
+	mid = size / 2;
+	max = get_max(stacka, stacka[mid]);
+	printf("//%d", stacka[mid]);
+	while (max)
+	{
+		if (main->stacka->elem < stacka[mid])
+		{
+			send_op(main, "pb");
+			max--;
+			size--;
+		}
+		while (count_r)
+		{
+			count_r--;
+			send_op(main, "rra");
+		}
+		count_r = move_small2(main, stacka, mid);
+	}
+	exit (0);
+}
+
+
+int	chunkify(t_main *main)
+{
+	int size;
+	int tmp;
+
+	tmp = stack_len(main->stacka);
+	size = main->chunks->elem;
+	while (main->chunks->elem)
+	{
+		send_op(main, "pa");
+		main->chunks->elem--;
+	}
+	move_chunk(main);
+	to_b_size(main, size);
+	//print_chunk(main);
+}
+
 int	init_stack_sort(t_main *main, int *stacka, int len)
 {
 	int i;
@@ -571,10 +662,16 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 		push(&main->stacka, stacka[i]);
 		i--;
 	}
-	quicksort(stacka, 0, len - 1);
+		quicksort(stacka, 0, len - 1);
 	to_b(main, stacka);
 	while (main->chunks)
 	{
+		if (main->chunks->elem > 20)
+		{
+			//printf("end [%d]", main->chunks->elem);
+			chunkify(main);
+			//exit(0);
+		}
 		while (main->chunks->elem)
 		{
 			count_r = 0;
@@ -588,11 +685,10 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 				send_op(main, "rb");
 				count_r++;
 			}
-			p(&main->stackb, &main->stacka);
+			send_op(main, "pa");
 			main->chunks->elem--;
 			while (count_r && stack_len(main->stackb) > 1)
 			{	
-				//rev_r(&main->stackb);
 				send_op(main, "rrb");
 				count_r--;
 			}
@@ -612,8 +708,6 @@ int	main(int argc, char **argv)
 	len = argc - 1;
 	if (!check_format(&stacka, &len, argv))
 		return (exit_push_swap("Error\n"));
-	if (!(index = malloc(sizeof(int) * 2)))
-		return (0);
 	main.stacka = NULL;
 	main.stackb = NULL;
 	init_stack_sort(&main, stacka, len);

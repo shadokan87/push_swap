@@ -9,6 +9,7 @@
 typedef struct	s_stack
 {
 	int elem;
+	int group;
 	struct s_stack *n;
 }				t_stack;
 typedef struct	s_main
@@ -16,6 +17,7 @@ typedef struct	s_main
 	t_stack		*stacka;
 	t_stack		*stackb;
 	t_stack		*chunks;
+	t_stack		*chunkify;
 	char		*op;
 }				t_main;
 int	twodlen(char **str);
@@ -30,6 +32,7 @@ int check_format(int **stacka, int *argc, char **argv);
 
 void fill_stacka2(t_stack **stack, int **stacka, int len);
 int push(t_stack **stack, int elem);
+int push2(t_stack **stack, int elem, int group);
 void print_stack(t_stack *stack);
 int stack_len(t_stack *stack);
 int s(t_stack **stack);

@@ -14,6 +14,25 @@ void	fill_stacka2(t_stack **stack, int **stacka, int len)
 	}
 }
 
+int		push2(t_stack **stack, int elem, int group)
+{
+	t_stack *new;
+
+	if (!(new = malloc(sizeof(t_stack))))
+		return (0);
+	new->elem = elem;
+	new->group = group;
+	new->n = NULL;
+	if (!*stack)
+	{
+		*stack = new;
+		return (1);
+	}
+	new->n = *stack;
+	*stack = new;
+	return (1);
+}
+
 int		push(t_stack **stack, int elem)
 {
 	t_stack *new;
