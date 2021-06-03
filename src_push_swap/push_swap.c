@@ -749,9 +749,7 @@ int	to_a3(t_main *main)
 	int *stacka;
 	int to_find;
 	if (main->chunks->elem > 20)
-	{
 		return (chunkify(main));
-	}
 	while (main->chunks->elem)
 	{
 		count_r = 0;
@@ -791,44 +789,9 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 		push(&main->stacka, stacka[i]);
 		i--;
 	}
-		quicksort(stacka, 0, len - 1);
+	quicksort(stacka, 0, len - 1);
 	to_b(main, stacka);
-	/*
-	while (main->chunks)
-	{
-		while (main->chunks->elem > 20)
-		{
-			//printf("end [%d]", main->chunks->elem);
-			chunkify(main);
-			//print_chunk(main);
-			//exit(0);
-		}
-		while (main->chunks->elem)
-		{
-			count_r = 0;
-			stacka = stack_to_int(main->stackb, main->chunks->elem);
-			quicksort(stacka, 0, main->chunks->elem - 1);
-			to_find = stacka[main->chunks->elem - 1];
-			if (main->chunks->elem >= 2 && main->stackb->n->elem == to_find)
-				send_op(main, "sb");
-			while (main->stackb->elem != to_find)
-			{
-				send_op(main, "rb");
-				count_r++;
-			}
-			send_op(main, "pa");
-			main->chunks->elem--;
-			while (count_r && stack_len(main->stackb) > 1)
-			{	
-				send_op(main, "rrb");
-				count_r--;
-			}
-		}
-		move_chunk(main);
-	}
-*/
-	//print_both(main);
-	to_a3(main);
+	return (to_a3(main));
 }
 
 int	main(int argc, char **argv)
@@ -844,7 +807,6 @@ int	main(int argc, char **argv)
 	main.stacka = NULL;
 	main.stackb = NULL;
 	init_stack_sort(&main, stacka, len);
-	//print_both(&main);
-	//if (is_sorted(main.stacka))
-	//	printf("OK\n");
+	if (is_sorted(main.stacka))
+		printf("OK\n");
 }
