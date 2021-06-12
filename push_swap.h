@@ -2,6 +2,7 @@
 #include "./libft/libft.h"
 #include "./gnl_working/get_next_line.h"
 #include <stdio.h>
+//#include "Memd/mem.h"
 #define A 0
 #define B 1
 #define OPS "sa sb ss pa pb ra rb rr rra rrb rrr"
@@ -17,7 +18,7 @@ typedef struct	s_main
 	t_stack		*stacka;
 	t_stack		*stackb;
 	t_stack		*chunks;
-	t_stack		*chunkify;
+	t_stack		*chun2;
 	char		*op;
 }				t_main;
 int	twodlen(char **str);
