@@ -23,7 +23,7 @@ static int str_diff(char *s1, char *s2)
 	return (1);
 }
 
-int cutsize = 20;
+int cutsize = 10;
 
 void	send_op(t_main *main, char *op)
 {
@@ -894,6 +894,7 @@ int	main(int argc, char **argv)
 	main.stacka = NULL;
 	main.stackb = NULL;
 	init_stack_sort(&main, stacka, len);
+	exit (0);
 	//print_both(&main);
 	if (is_sorted(main.stacka) && main.stacka && !main.stackb)
 		printf("OK\n");
