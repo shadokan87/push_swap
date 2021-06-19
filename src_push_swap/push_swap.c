@@ -23,7 +23,7 @@ static int str_diff(char *s1, char *s2)
 	return (1);
 }
 
-int cutsize = 10;
+int cutsize = 20;
 
 void	send_op(t_main *main, char *op)
 {
@@ -877,6 +877,8 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 	}
 	quicksort(stacka, 0, len - 1);
 	to_b(main, stacka);
+	printf("elem %d", main->chunks->n->elem);
+	//exit (0);
 	to_a2(main);
 	return (0);
 }
@@ -894,7 +896,6 @@ int	main(int argc, char **argv)
 	main.stacka = NULL;
 	main.stackb = NULL;
 	init_stack_sort(&main, stacka, len);
-	exit (0);
 	//print_both(&main);
 	if (is_sorted(main.stacka) && main.stacka && !main.stackb)
 		printf("OK\n");
