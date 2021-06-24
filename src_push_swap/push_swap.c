@@ -320,13 +320,8 @@ void	move_small(t_main *main, int *stacka, int mid)
 {
 	if (small_l(main, stacka[mid]) < small_r(main, stacka[mid]))
 	{
-	while (!(main->stacka->elem < stacka[mid]))
-	{
-		//if (main->stacka->n->elem < stacka[mid] && !(main->stacka->elem < stacka[mid]))
-		//	send_op(main, "sa");
-		//else
-		send_op(main, "ra");
-	}
+		while (!(main->stacka->elem < stacka[mid]))
+			send_op(main, "ra");
 	}
 	else
 	{
@@ -362,12 +357,10 @@ int	to_b(t_main *main, int *stacka)
 	//while (mid > 10 && mid % 10 != 0)
 	//	mid--;
 	max = get_max(stacka, stacka[mid]);
-	//printf("max %d\n", max);
 	push(&main->chunks, max);
 	while (max)
 	{
 		move_small(main, stacka, mid);
-		//send_op(main, "ra");
 		send_op(main, "pb");
 		max--;
 	}
@@ -785,10 +778,16 @@ int	to_a2(t_main *main)
 		to_find = stacka[main->chunks->elem - 1];
 		count_r = to_a2_move_to_top(main, to_find);
 		send_op(main, "pa");
+		to_find = stacka[main->chunks->elem - 2];
 		main->chunks->elem--;
 		while (count_r && stack_len(main->stackb) > 1)
 		{	
 			send_op(main, "rrb");
+			if (main->stackb->elem == to_find)
+			{
+				send_op(main, "pa");
+				main->chunks->elem--;
+			}
 			count_r--;
 		}
 	}
@@ -877,8 +876,6 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 	}
 	quicksort(stacka, 0, len - 1);
 	to_b(main, stacka);
-	printf("elem %d", main->chunks->n->elem);
-	//exit (0);
 	to_a2(main);
 	return (0);
 }
