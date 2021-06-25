@@ -67,13 +67,18 @@ def print_flags(n, o):
     if (len(sys.argv) == 1):
         return (0)
     i = 1
+    ok = 0
     file = open("pytest_debug", "a+")
     while (i < len(sys.argv)):
-        if (sys.argv[i] == "-O"):
-            file.write(o)
-        elif (sys.argv[i] == "-N"):
-            file.write(n)
+        if (sys.argv[i] == "-N"):
+            file.write("Comb: " + n + ENDL)
+            ok = 1
+        elif (sys.argv[i] == "-O"):
+            file.write("Op: " + o + ENDL)
+            ok = 1
         i += 1
+    if (ok):
+        file.write(ENDL + ENDL)
     file.close()
 
 def runLine(line):
