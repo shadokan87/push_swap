@@ -50,36 +50,51 @@ def intToStr(arr, sep):
 		i += 1
 	return (ret)
 
-def execCmd(concat):
-	prog = "./push_swap"
+def execCmd(prog, concat):
 	proc=subprocess.Popen(prog + " " + concat, shell=True, stdout=subprocess.PIPE)
 	output=proc.communicate()[0]
 	return (output)
 
 
-def summary(line, ok, op, koCountCap):
+def summary(line, ok, op, koCountCap, koNotSorted):
 	if (ok):
 		print(str(line[0]) + "OK")
 		return (ok)
 	print("[CAP]" + "KO " + "expected: " + str(line[1]) + "frequence: " + str(koCountCap) + " / " + str(line[2]))
+        if (koNotSorted != 0):
+            print("[! 0 - 9] KO" + str(koNotSorted) + str(line[0]))
+def print_flags(n, o):
+    if (len(sys.argv) == 1):
+        return (0)
+    i = 1
+    file = open("pytest_debug", "a+")
+    while (i < len(sys.argv)):
+        if (sys.argv[i] == "-O"):
+            file.write(o)
+        elif (sys.argv[i] == "-N"):
+            file.write(n)
+        i += 1
+    file.close()
 
 def runLine(line):
 	y = 0
 	ok = 1
 	op = -1
 	koCountCap = 0
+        koNotSorted = 0
 	while (y < int(line[2])):
 		rand = random.sample(range(-1000, 1000), int(line[0]))
 		concat = intToStr(rand, " ")
-		res = execCmd(concat)
+		res = execCmd("./push_swap", concat)
+                print_flags(concat, res)
 		print((len(str.split(res, ENDL)) - 1))
 		if ((len(str.split(res, ENDL)) - 1) > int(line[1])):
 			ok = 0
 			koCountCap += 1
 			op = (len(str.split(res, ENDL)) - 1)
-		#print(len(str.split(res, ENDL)) - 1)
 		y += 1
-	summary(line, ok, op, koCountCap)
+	summary(line, ok, op, koCountCap, koNotSorted)
+        getTestLines()
 		
 
 def runTest(commands):
@@ -108,7 +123,6 @@ def getTestLines():
 			commands += [str.split(newCmd)]
 		else:
 			print("input ignored since invalid." + ENDL + "Usage: " + usage + ENDL)
-#
 
 while 1:
 	answer = newPrompt("1: instructions 2:start test " + ENDL)

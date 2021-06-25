@@ -19,6 +19,7 @@ typedef struct	s_main
 	t_stack		*stackb;
 	t_stack		*chunks;
 	t_stack		*chun2;
+	int			cutsize;
 	char		*op;
 }				t_main;
 int	twodlen(char **str);
