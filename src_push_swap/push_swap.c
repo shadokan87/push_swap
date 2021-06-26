@@ -354,8 +354,8 @@ int	to_b(t_main *main, int *stacka)
 	if (is_sorted(main->stacka))
 		return (0);
 	mid = stack_len(main->stacka) / 2;
-	//while (mid > 10 && mid % 10 != 0)
-	//	mid--;
+	while (mid > 10 && mid % 10 != 0)
+		mid--;
 	max = get_max(stacka, stacka[mid]);
 	push(&main->chunks, max);
 	while (max)
@@ -767,11 +767,13 @@ int	to_a2(t_main *main)
 	int count_r;
 	int *stacka;
 	int to_find;
+	int i;
 
 	while (main->chunks->elem > cutsize)
 		chunkify(main);
 	while (main->chunks->elem)
 	{
+		i = 1;
 		count_r = 0;
 		stacka = stack_to_int(main->stackb, main->chunks->elem);
 		quicksort(stacka, 0, main->chunks->elem - 1);
@@ -787,8 +789,10 @@ int	to_a2(t_main *main)
 			{
 				send_op(main, "pa");
 				main->chunks->elem--;
+				to_find = stacka[main->chunks->elem - 1];
 			}
 			count_r--;
+			i++;
 		}
 	}
 	move_chunk(main);
@@ -880,6 +884,23 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 	return (0);
 }
 
+void	set_cutsize(t_main *main, int len)
+{
+	if (len == 100)
+		main->cutsize = 20;
+	else if (len == 500)
+		main->cutsize = 10;
+	else
+		main->cutsize = 0;
+}
+
+int		case_two(int *stacka)
+{
+	if (stacka[0] > stacka[1])
+		printf("sa\n");
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
 	t_main	main;
@@ -892,8 +913,10 @@ int	main(int argc, char **argv)
 		return (exit_push_swap("Error\n"));
 	main.stacka = NULL;
 	main.stackb = NULL;
+	if (len == 2)
+		return (case_two(stacka));
+	set_cutsize(&main, len);
 	init_stack_sort(&main, stacka, len);
-	//print_both(&main);
 	if (is_sorted(main.stacka) && main.stacka && !main.stackb)
 		printf("OK\n");
 }
