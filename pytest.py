@@ -91,8 +91,8 @@ def runLine(line):
 		rand = random.sample(range(-1000, 1000), int(line[0]))
 		concat = intToStr(rand, " ")
 		res = execCmd("./push_swap", concat)
-                #ko = res[len(res) - 3] + res[len(res) - 2]
-                ko = "OK"
+                ko = res[len(res) - 3] + res[len(res) - 2]
+                #ko = "OK"
                 if (ko != "OK"):
                     ko = "KO"
                 print_flags(concat, res)

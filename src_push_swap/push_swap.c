@@ -43,6 +43,16 @@ void	send_op(t_main *main, char *op)
 		rev_r(&main->stacka);
 	else if (str_diff(op, "rrb"))
 		rev_r(&main->stackb);
+	if (str_diff(op, "rrr"))
+	{
+		rev_r(&main->stackb);
+		rev_r(&main->stacka);
+	}
+	else if (str_diff(op, "rr"))
+	{
+		r(&main->stackb);
+		r(&main->stacka);
+	}
 	printf("%s\n", op);
 }
 
@@ -63,34 +73,6 @@ int	*get_numbers(char **argv)
 		i++;
 	}
 	return (ret);
-}
-
-
-void	print_stack3(t_stack *stack, int len)
-{
-	t_stack *ptr;
-	int i;
-
-	i = 0;
-	ptr = stack;
-	while (ptr && i < len)
-	{
-		printf("[/%d]\n", ptr->elem);
-		ptr = ptr->n;
-		i++;
-	}
-}
-
-void	print_stack2(int *stack, int len)
-{
-	int i;
-
-	i = 0;
-	while (i < len)
-	{
-		printf("%d ", stack[i]);
-		i++;
-	}
 }
 
 void	swap(int *a, int *b)
@@ -226,18 +208,6 @@ int		move_chunk(t_main *main)
 	return (1);
 }
 
-void	print_stacka(int *stacka, int len)
-{
-	int i;
-
-	i = 0;
-	while (i < len)
-	{
-		printf("[%d]", stacka[i]);
-		i++;
-	}
-}
-
 int	get_max(int *stacka, int to_find)
 {
 	int ret;
@@ -253,23 +223,6 @@ int	case_two_a(t_main *main)
 	if (main->stacka->elem > main->stacka->n->elem)
 		s(&main->stacka);
 	return (0);
-}
-
-int	sorted_a(t_main *main, int *stacka)
-{
-	int i;
-	t_stack *ptr;
-
-	i = 0;
-	ptr = main->stacka;
-	while (i < stack_len(main->stacka))
-	{
-		if (stacka[i] != ptr->elem)
-			return (0);
-		i++;
-		ptr = ptr->n;
-	}
-	return (1);
 }
 
 int	 get_loc(t_stack *stack, int to_find)
@@ -326,20 +279,8 @@ void	move_small(t_main *main, int *stacka, int mid)
 	else
 	{
 	while (!(main->stacka->elem < stacka[mid]))
-	{
-		//if (main->stacka->n->elem < stacka[mid] && !(main->stacka->elem < stacka[mid]))
-		//	send_op(main, "sa");
-		//else
 		send_op(main, "rra");
 	}
-	}
-	/*
-	else
-	{
-		while (!(main->stacka->elem < stacka[mid]))
-			send_op(main, "rra");
-	}
-	*/
 }
 
 int	to_b(t_main *main, int *stacka)
@@ -398,14 +339,6 @@ int	case_two_b(t_main *main)
 		s(&main->stackb);
 	move_chunk(main);
 	return (1);
-}
-
-void	print_both(t_main *main)
-{
-	printf("A: \n");
-	print_stack(main->stacka);
-	printf("\nB: \n");
-	print_stack(main->stackb);
 }
 
 void	case_sorted_b(t_main *main)
@@ -473,28 +406,6 @@ int	to_a(t_main *main, int *stacka)
 	return (to_a(main, stacka));
 }
 
-void	print_chunk(t_main *main)
-{
-	t_stack *ptr;
-	t_stack *ptr2;
-	int i;
-
-	ptr2 = main->stackb;
-	ptr = main->chunks;
-	while (ptr)
-	{
-		i = 0;
-		while (i < ptr->elem)
-		{
-			printf("[%d]\n", ptr2->elem);
-			i++;
-			ptr2 = ptr2->n;
-		}
-		printf("\n\n");
-		ptr = ptr->n;
-	}
-}
-
 int	get_lloc(t_stack *stack, int to_find, int len)
 {
 	int i;
@@ -538,7 +449,6 @@ int	mv_elem_top(t_stack **stack, int to_find)
 	{
 			r(stack);
 			count_r++;
-
 	}
 	if (count_r)
 		return (1);
@@ -633,98 +543,12 @@ int	is_present2(char **curr, int to_find)
 	return (0);
 }
 
-void	str_to_stack(t_main *main, char *str)
+int	chunkify2(t_main *main, t_stack *tmp)
 {
-	char **split;
-	char **curr;
-	int i;
-	int count_r;
-	int max;
-	int count_pa;
-
-	split = ft_split(str, '\n');
-	i = 0;
-	while (split[i])
-	{
-	count_r = 0;
-	curr = ft_split(split[i], ' ');
-	max = split_len(curr);
-	count_pa = max;
-	push(&main->chunks, max);
-	//printf("%s\n", split[i]);
-	print_chunk(main);
-	exit (0);
-	while (max)
-	{
-		while (!(is_present2(curr, main->stackb->elem)))
-		{
-			send_op(main, "rb");
-			count_r++;
-		}
-		send_op(main, "pa");
-		max--;
-	}
-	while (count_pa)
-	{
-		send_op(main, "pb");
-		count_pa--;
-	}
-	while (count_r)
-	{
-		send_op(main, "rrb");
-		count_r--;
-	}
-	i++;
-	}
-}
-
-int	to_b2(t_main *main, int *stacka, int size)
-{
-	char *str;
-	int i;
-	int count;
-
-	i = 1;
-	count = 1;
-	str = NULL;
-	quicksort(stacka, 0, size - 1);
-	str = ft_itoa(stacka[0]);
-	while (i < size)
-	{
-		str = ft_strjoin(ft_strjoin(str, " "), ft_itoa(stacka[i]));
-		i++;
-		count++;
-		if (count == cutsize)
-		{
-			str = ft_strjoin(str, "\n");
-			count = 0;
-		}
-	}
-	str_to_stack(main, str);
-//exit (0);
-}
-
-int	chunkify(t_main *main)
-{
-	int size;
 	int *stacka;
 	int count;
 
 	count = 0;
-	size = main->chunks->elem;
-	t_stack *tmp;
-	t_stack *tmp2;
-
-	tmp2 = NULL;
-	tmp = main->stacka;
-	main->stacka = tmp2;
-	while (main->chunks->elem)
-	{
-		send_op(main, "pa");
-		main->chunks->elem--;
-	}
-	move_chunk(main);
-//	print_stack(main->stacka);
 	stacka = stack_to_int(main->stacka, stack_len(main->stacka));
 	quicksort(stacka, 0, stack_len(main->stacka) - 1);
 	to_b(main, stacka);
@@ -739,6 +563,25 @@ int	chunkify(t_main *main)
 		send_op(main, "pa");
 		count--;
 	}
+}
+
+int	chunkify(t_main *main)
+{
+	int *stacka;
+	int count;
+
+	t_stack *tmp;
+	t_stack *tmp2;
+	tmp2 = NULL;
+	tmp = main->stacka;
+	main->stacka = tmp2;
+	while (main->chunks->elem)
+	{
+		send_op(main, "pa");
+		main->chunks->elem--;
+	}
+	move_chunk(main);
+	chunkify2(main, tmp);
 	return (1);
 }
 
@@ -762,109 +605,45 @@ int		to_a2_move_to_top(t_main *main, int to_find)
 	return (count_r);
 }
 
-int	to_a2(t_main *main)
+void	to_a2_2(t_main *main)
 {
 	int count_r;
 	int *stacka;
 	int to_find;
-	int i;
 
+	count_r = 0;
+	stacka = stack_to_int(main->stackb, main->chunks->elem);
+	quicksort(stacka, 0, main->chunks->elem - 1);
+	to_find = stacka[main->chunks->elem - 1];
+	count_r = to_a2_move_to_top(main, to_find);
+	send_op(main, "pa");
+	to_find = stacka[main->chunks->elem - 2];
+	main->chunks->elem--;
+	while (count_r && stack_len(main->stackb) > 1)
+	{	
+		send_op(main, "rrb");
+		if (main->stackb->elem == to_find)
+		{
+			send_op(main, "pa");
+			main->chunks->elem--;
+			to_find = stacka[main->chunks->elem - 1];
+		}
+		count_r--;
+	}
+}
+
+int	to_a2(t_main *main)
+{
 	while (main->chunks->elem > cutsize)
 		chunkify(main);
 	while (main->chunks->elem)
-	{
-		i = 1;
-		count_r = 0;
-		stacka = stack_to_int(main->stackb, main->chunks->elem);
-		quicksort(stacka, 0, main->chunks->elem - 1);
-		to_find = stacka[main->chunks->elem - 1];
-		count_r = to_a2_move_to_top(main, to_find);
-		send_op(main, "pa");
-		to_find = stacka[main->chunks->elem - 2];
-		main->chunks->elem--;
-		while (count_r && stack_len(main->stackb) > 1)
-		{	
-			send_op(main, "rrb");
-			if (main->stackb->elem == to_find)
-			{
-				send_op(main, "pa");
-				main->chunks->elem--;
-				to_find = stacka[main->chunks->elem - 1];
-			}
-			count_r--;
-			i++;
-		}
-	}
+		to_a2_2(main);
 	move_chunk(main);
 	if (main->stackb)
 		return (to_a2(main));
 	return (0);
 }
 
-int	case_sorted_a3(t_main *main)
-{
-	//printf("case sorted");
-	while (main->chunks->elem)
-	{
-		send_op(main, "pa");
-		main->chunks->elem--;
-	}
-	return (1);
-}
-
-int	case_two_a3(t_main *main)
-{
-	printf("case two\n%d  / %d", stack_len(main->stackb), stack_len(main->chunks));
-	if (main->stackb->elem < main->stackb->n->elem)
-		send_op(main, "sb");
-	return (case_sorted_a3(main));
-}
-
-int	case_sortedfull_a3(t_main *main)
-{
-	while (main->stackb)
-		send_op(main, "pa");
-	while (main->chunks)
-		move_chunk(main);
-	return (1);
-}
-
-int	to_a3(t_main *main)
-{
-	int mid;
-	int max;
-	int count_r;
-	int *stacka;
-
-	if (main->chunks->elem == 2)
-		return (case_two_a3(main));
-	else if (is_sorted_rev(main->stackb, main->chunks->elem))
-		return (case_sorted_a3(main));
-	count_r = 0;
-	mid = main->chunks->elem / 2;
-	max = get_max2(main, mid);
-	stacka = stack_to_int(main->stackb, main->chunks->elem);
-	quicksort(stacka, 0, main->chunks->elem - 1);
-	while (max)
-	{
-		while (!(main->stackb->elem > stacka[mid]))
-		{
-			send_op(main, "rb");
-			count_r++;
-		}
-		max--;
-		main->chunks->elem--;
-		send_op(main, "pa");
-	}
-	while (count_r)
-	{
-		send_op(main, "rrb");
-		count_r--;
-	}
-	return (1);
-}
-
-int pass = 0;
 int	init_stack_sort(t_main *main, int *stacka, int len)
 {
 	int i;
