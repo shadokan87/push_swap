@@ -2,9 +2,9 @@
 
 void	fill_stacka2(t_stack **stack, int **stacka, int len)
 {
-	int i;
-	int *ptr;
-	
+	int	i;
+	int	*ptr;
+
 	ptr = *stacka;
 	i = len - 1;
 	while (i > -1)
@@ -14,11 +14,12 @@ void	fill_stacka2(t_stack **stack, int **stacka, int len)
 	}
 }
 
-int		push(t_stack **stack, int elem)
+int	push(t_stack **stack, int elem)
 {
-	t_stack *new;
+	t_stack	*new;
 
-	if (!(new = malloc(sizeof(t_stack))))
+	new = malloc(sizeof(t_stack));
+	if (!new)
 		return (0);
 	new->elem = elem;
 	new->n = NULL;
@@ -34,8 +35,8 @@ int		push(t_stack **stack, int elem)
 
 void	print_stack(t_stack *stack)
 {
-	t_stack *print;
-	
+	t_stack	*print;
+
 	print = stack;
 	while (print)
 	{
@@ -44,10 +45,10 @@ void	print_stack(t_stack *stack)
 	}
 }
 
-int		stack_len(t_stack *stack)
+int	stack_len(t_stack *stack)
 {	
-	int i;
-	t_stack *count;
+	int		i;
+	t_stack	*count;
 
 	i = 0;
 	count = stack;
@@ -59,11 +60,11 @@ int		stack_len(t_stack *stack)
 	return (i);
 }
 
-int		s(t_stack **stack)
+int	s(t_stack **stack)
 {
-	t_stack *tmp;
-	int i;
-	int len;
+	t_stack		*tmp;
+	int			i;
+	int			len;
 
 	i = 0;
 	len = stack_len(*stack);
@@ -76,9 +77,9 @@ int		s(t_stack **stack)
 	return (1);
 }
 
-int		p(t_stack **src, t_stack **dst)
+int	p(t_stack **src, t_stack **dst)
 {
-	t_stack *to_free;
+	t_stack	*to_free;
 
 	if (!*src)
 		return (0);
@@ -89,11 +90,11 @@ int		p(t_stack **src, t_stack **dst)
 	return (1);
 }
 
-int		r(t_stack **stack)
+int	r(t_stack **stack)
 {
-	t_stack *last;
-	t_stack *ptr;
-	
+	t_stack	*last;
+	t_stack	*ptr;
+
 	last = *stack;
 	while (last->n)
 		last = last->n;
@@ -103,12 +104,12 @@ int		r(t_stack **stack)
 	*stack = ptr;
 }
 
-int		rev_r(t_stack **stack)
+int	rev_r(t_stack **stack)
 {
-	int len;
-	t_stack *last;
-	t_stack *prevlast;
-	
+	int		len;
+	t_stack	*last;
+	t_stack	*prevlast;
+
 	len = stack_len(*stack);
 	if (!(*stack && len > 1))
 		return (0);
@@ -125,15 +126,10 @@ int		rev_r(t_stack **stack)
 	*stack = last;
 }
 
-int		listen_op(t_main *main)
+int	is_op(char *op)
 {
-	return (1);
-}
-
-int		is_op(char *op)
-{
-	int i;
-	char **ops;
+	int		i;
+	char	**ops;
 
 	ops = ft_split(OPS, ' ');
 	i = 0;
@@ -146,7 +142,7 @@ int		is_op(char *op)
 	return (0);
 }
 
-int		exec_op(t_main *main)
+int	exec_op(t_main *main)
 {
 	if (!is_op(main->op))
 		return (0);

@@ -91,10 +91,10 @@ def runLine(line):
 		rand = random.sample(range(-1000, 1000), int(line[0]))
 		concat = intToStr(rand, " ")
 		res = execCmd("./push_swap", concat)
-                ko = res[len(res) - 3] + res[len(res) - 2]
-                #ko = "OK"
-                if (ko != "OK"):
-                    ko = "KO"
+                ko = res.find("OK", 0, len(res))
+                ko = "KO"
+                if (ko != -1):
+                    ko = "OK"
                 print_flags(concat, res)
 		print(str((len(str.split(res, ENDL)) - 1)) + " [SORT ?] " + ko)
 		if ((len(str.split(res, ENDL)) - 1) > int(line[1])):
@@ -106,7 +106,6 @@ def runLine(line):
                     ok = 0
 		y += 1
 	summary(line, ok, op, koCountCap, koNotSorted)
-        getTestLines()
 		
 
 def runTest(commands):
@@ -116,6 +115,7 @@ def runTest(commands):
 	while (i < cmdLen):
 		runLine(commands[i])
 		i += 1
+        getTestLines()
 def answerIsOk(answer):
 	tmp = str.split(answer)
 	if (len(tmp) != 3):
