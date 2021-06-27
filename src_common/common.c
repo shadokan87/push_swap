@@ -139,7 +139,7 @@ int		check_nonvar_format(int **stacka, int *argc, char **argv, int mode)
 	}
 	if (tmp)
 		free(tmp);
-	free_2dtab(&argv, 0);
+	//free_2dtab(&argv, 0);
 	return (fill_stacka(stacka, nb, *argc));
 }
 
