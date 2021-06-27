@@ -15,7 +15,7 @@ int	is_present2(char **curr, int to_find)
 	return (0);
 }
 
-int	chunkify2(t_main *main, t_stack *tmp)
+void	chunkify2(t_main *main, t_stack *tmp)
 {
 	int	*stacka;
 	int	count;
@@ -40,8 +40,6 @@ int	chunkify2(t_main *main, t_stack *tmp)
 
 int	chunkify(t_main *main)
 {
-	int		*stacka;
-	int		count;
 	t_stack	*tmp;
 	t_stack	*tmp2;
 

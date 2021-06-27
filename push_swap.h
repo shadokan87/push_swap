@@ -67,7 +67,7 @@ int get_max3(t_main *main, int mid, int size);
 int move_small2(t_main *main, int *stacka, int mid);
 int split_len(char **split);
 int is_present2(char **curr, int to_find);
-int chunkify2(t_main *main, t_stack *tmp);
+void	chunkify2(t_main *main, t_stack *tmp);
 int chunkify(t_main *main);
 int to_a2_move_to_top(t_main *main, int to_find);
 void to_a2_2(t_main *main);

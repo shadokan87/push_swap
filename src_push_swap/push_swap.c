@@ -4,9 +4,6 @@
 int	init_stack_sort(t_main *main, int *stacka, int len)
 {
 	int	i;
-	int	count_r;
-	int	to_find;
-	int	*orig;
 
 	i = len - 1;
 	while (i >= 0)
@@ -15,9 +12,14 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 		i--;
 	}
 	free(stacka);
+	if (is_sorted(main->stacka))
+	{
+		free_stack(main);
+		return (0);
+	}
 	to_b(main);
 	to_a2(main);
-	return (0);
+	return (1);
 }
 
 void	set_cutsize(t_main *main, int len)
@@ -61,7 +63,6 @@ int	main(int argc, char **argv)
 {
 	t_main	main;
 	int		*stacka;
-	int		*index;
 	int		len;
 
 	len = argc - 1;
@@ -72,8 +73,9 @@ int	main(int argc, char **argv)
 	if (len == 2 || len == 1)
 		return (case_two(stacka, len));
 	set_cutsize(&main, len);
-	init_stack_sort(&main, stacka, len);
-	if (is_sorted(main.stacka) && main.stacka && !main.stackb)
+	if (!init_stack_sort(&main, stacka, len))
+		return (0);
+	if (main.stacka && (is_sorted(main.stacka) && main.stacka && !main.stackb))
 		printf("OK\n");
 	free_stack(&main);
 }

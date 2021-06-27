@@ -40,6 +40,7 @@ int	get_max3(t_main *main, int mid, int size)
 	int	i;
 	int	count;
 
+	(void)main;
 	i = mid + 1;
 	count = 0;
 	while (i < size)

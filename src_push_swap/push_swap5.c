@@ -65,9 +65,7 @@ int	to_b(t_main *main)
 {
 	int		mid;
 	int		max;
-	int		loc;
 	int		*stacka;
-	t_stack	*last;
 
 	if (stack_len(main->stacka) == 2 || !stack_len(main->stacka))
 		return (case_two_a(main));

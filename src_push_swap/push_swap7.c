@@ -31,6 +31,7 @@ void	to_a_part2(t_main *main, int *stacka)
 
 int	to_a_case(t_main *main, int *stacka)
 {
+	(void)stacka;
 	if (main->chunks->elem == 1)
 	{
 		case_one_b(main);
@@ -51,9 +52,7 @@ int	to_a_case(t_main *main, int *stacka)
 
 int	to_a(t_main *main, int *stacka)
 {
-	int	mid;
 	int	i;
-	int	max;
 	int	count_r;
 
 	i = 0;
