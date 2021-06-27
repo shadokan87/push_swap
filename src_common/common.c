@@ -12,26 +12,55 @@ int	twodlen(char **str)
 	return (i);
 }
 
+int		free_2dtab(char ***to_free, int ret)
+{
+	char	**ptr;
+	int		i;
+
+	i = -1;
+	ptr = *to_free;
+	if (!ptr)
+		return (ret);
+	while (ptr[++i])
+		free(ptr[i]);
+	free(ptr);
+	*to_free = NULL;
+	return (ret);
+}
+
 int		is_var(char **argv)
 {
 	int i;
+	int y;
 	char **split;
 
 	split = ft_split(argv[1], ' ');
 	i = 0;
+	y = -1;
 	while (split[i])
 		i++;
 	if (i == 1)
+	{
+		free_2dtab(&split, 0);
 		return (0);
+	}
+	free_2dtab(&split, 1);
 	return (1);
 }
 
-int		exit_push_swap(char *message)
+int		exit_push_swap(t_main *main, char *message)
 {
-	if (!message)
-		printf("Error\n");
-	else
-		printf("%s", message);
+	if (!str_diff(message, "none"))
+	{
+		if (!message)
+			printf("Error\n");
+		else
+			printf("%s", message);
+	}
+	if (main->stacka)
+		free(main->stacka);
+	if (main->stackb)
+		free(main->stackb);
 	return (0);
 }
 
@@ -64,20 +93,6 @@ int		is_present(int *nb, int len, int to_insert)
 	return (0);
 }
 
-static int str_diff(char *s1, char *s2)
-{
-	int i;
-
-	i = 0;
-	if (ft_strlen(s1) != ft_strlen(s2))
-		return (0);
-	while (s1[i] && s1[i] == s2[i])
-		i++;
-	if (s1[i])
-		return (0);
-	return (1);
-}
-
 int		fill_stacka(int **stacka, int *nb, int len)
 {
 	int i;
@@ -100,20 +115,31 @@ int		check_nonvar_format(int **stacka, int *argc, char **argv, int mode)
 	int i;
 	int nb[*argc];
 	int to_insert;
+	char *tmp;
 
+	tmp = NULL;
 	i = mode;
 	while (mode ? i <= *argc : i < *argc)
 	{
+		if (tmp)
+			free(tmp);
 		if (!number_is_valid(argv[i]))
 			return (0);
 		to_insert = ft_atoi(argv[i]);
 		if (is_present(nb, i - mode, to_insert))
 			return (0);
-		if (!str_diff(ft_itoa(to_insert), argv[i]))
+		tmp = ft_itoa(to_insert);
+		if (!str_diff(tmp, argv[i]))
+		{
+			free(tmp);
 			return (0);
+		}
 		nb[i - mode] = to_insert;
 		i++;
 	}
+	if (tmp)
+		free(tmp);
+	free_2dtab(&argv, 0);
 	return (fill_stacka(stacka, nb, *argc));
 }
 

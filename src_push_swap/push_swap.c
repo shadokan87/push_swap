@@ -9,7 +9,7 @@ typedef struct s_solve
 	int swap;
 }				t_solve;
 
-static int str_diff(char *s1, char *s2)
+int str_diff(char *s1, char *s2)
 {
 	int i;
 
@@ -254,6 +254,7 @@ int		small_r(t_main *main, int small)
 		i--;
 		count++;
 	}
+	free(stack);
 	return (count);
 }
 
@@ -266,6 +267,7 @@ int		small_l(t_main *main, int small)
 	stack = stack_to_int(main->stacka, stack_len(main->stacka));
 	while (i < stack_len(main->stacka) && !(stack[i] < small))
 		i++;
+	free(stack);
 	return (i);
 }
 
@@ -283,17 +285,20 @@ void	move_small(t_main *main, int *stacka, int mid)
 	}
 }
 
-int	to_b(t_main *main, int *stacka)
+int	to_b(t_main *main)
 {
 	int mid;
 	int max;
 	int loc;
+	int *stacka;
 	t_stack *last;
 
 	if (stack_len(main->stacka) == 2 || !stack_len(main->stacka))
 		return (case_two_a(main));
 	if (is_sorted(main->stacka))
 		return (0);
+	stacka = stack_to_int(main->stacka, stack_len(main->stacka));
+	quicksort(stacka, 0, stack_len(main->stacka) - 1);
 	mid = stack_len(main->stacka) / 2;
 	while (mid > 10 && mid % 10 != 0)
 		mid--;
@@ -306,9 +311,7 @@ int	to_b(t_main *main, int *stacka)
 		max--;
 	}
 	free(stacka);
-	stacka = stack_to_int(main->stacka, stack_len(main->stacka));
-	quicksort(stacka, 0, stack_len(main->stacka) - 1);
-	return (to_b(main, stacka));
+	return (to_b(main));
 }
 
 int	get_max2(t_main *main, int mid)
@@ -551,7 +554,7 @@ int	chunkify2(t_main *main, t_stack *tmp)
 	count = 0;
 	stacka = stack_to_int(main->stacka, stack_len(main->stacka));
 	quicksort(stacka, 0, stack_len(main->stacka) - 1);
-	to_b(main, stacka);
+	to_b(main);
 	while (main->stacka)
 	{
 		send_op(main, "pb");
@@ -563,6 +566,7 @@ int	chunkify2(t_main *main, t_stack *tmp)
 		send_op(main, "pa");
 		count--;
 	}
+	free(stacka);
 }
 
 int	chunkify(t_main *main)
@@ -630,6 +634,7 @@ void	to_a2_2(t_main *main)
 		}
 		count_r--;
 	}
+	free(stacka);
 }
 
 int	to_a2(t_main *main)
@@ -657,9 +662,10 @@ int	init_stack_sort(t_main *main, int *stacka, int len)
 		push(&main->stacka, stacka[i]);
 		i--;
 	}
-	quicksort(stacka, 0, len - 1);
-	to_b(main, stacka);
+	free(stacka);
+	to_b(main);
 	to_a2(main);
+	//exit (0);
 	return (0);
 }
 
@@ -673,10 +679,16 @@ void	set_cutsize(t_main *main, int len)
 		main->cutsize = 0;
 }
 
-int		case_two(int *stacka)
+int		case_two(int *stacka, int len)
 {
+	if (len == 1)
+	{
+		free(stacka);
+		return (1);
+	}
 	if (stacka[0] > stacka[1])
 		printf("sa\n");
+	free(stacka);
 	return (1);
 }
 
@@ -689,13 +701,22 @@ int	main(int argc, char **argv)
 
 	len = argc - 1;
 	if (!check_format(&stacka, &len, argv))
-		return (exit_push_swap("Error\n"));
+		return (exit_push_swap(&main, "Error\n"));
 	main.stacka = NULL;
 	main.stackb = NULL;
-	if (len == 2)
-		return (case_two(stacka));
+	if (len == 2 || len == 1)
+		return (case_two(stacka, len));
 	set_cutsize(&main, len);
 	init_stack_sort(&main, stacka, len);
 	if (is_sorted(main.stacka) && main.stacka && !main.stackb)
 		printf("OK\n");
+	t_stack *tmp;
+	t_stack *tmp2;
+	tmp2 = main.stacka;
+	while (tmp2)
+	{
+		tmp = tmp2;
+		tmp2 = tmp2->n;
+		free(tmp);
+	}
 }
