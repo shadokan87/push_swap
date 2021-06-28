@@ -4,8 +4,8 @@ int	check_part3(char **argv, int *nb, int mode, int i)
 {
 	int	to_insert;
 
-//	if (!number_is_valid(argv[i]))
-//		return (0);
+	if (!number_is_valid(argv[i]))
+		return (0);
 	to_insert = ft_atoi(argv[i]);
 	if (is_present(nb, i - mode, to_insert))
 		return (0);
