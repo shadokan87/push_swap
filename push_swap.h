@@ -1,8 +1,7 @@
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
-# include "./libft/libft.h"
-# include "./gnl_working/get_next_line.h"
 # include <stdio.h>
+# include <stdlib.h>
 # define A 0
 # define B 1
 # define OPS "sa sb ss pa pb ra rb rr rra rrb rrr"
@@ -33,6 +32,12 @@ typedef struct s_solve
 	int			swap;
 }				t_solve;
 
+int		ft_isdigit(int c);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+char	*ft_itoa(int n);
+char	**ft_split(const char *s, char c);
+int		ft_strlen(const char *str);
+int		ft_atoi(const char *str);
 int		set_ret(char **ret, int size, int negative);
 void	splitnorme(char ***tab, int i, int **arr);
 int		new_star_char(char ***str, size_t size);

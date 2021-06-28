@@ -114,6 +114,7 @@ char	**ft_split(char const *s, char c)
 			y++;
 		i++;
 	}
+	free(words_len);
 	splitnorme(&tab, i, &words_len);
 	return (tab);
 }
