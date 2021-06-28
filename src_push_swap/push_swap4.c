@@ -23,18 +23,27 @@ int	is_sorted_rev(t_stack *stack, int len)
 
 int	is_sorted(t_stack *stack)
 {
-	t_stack		*ptr;
-	int			i;
+	int		*diffa;
+	int		len;
+	int		i;
+	t_stack	*ptr;
 
-	i = -1;
+	i = 0;
+	len = stack_len(stack);
+	diffa = stack_to_int(stack, len);
 	ptr = stack;
+	quicksort(diffa, 0, len - 1);
 	while (ptr)
 	{
-		if (i != -1 && ptr->elem < i)
+		if (ptr->elem != diffa[i])
+		{
+			free(diffa);
 			return (0);
-		i = ptr->elem;
+		}
 		ptr = ptr->n;
+		i++;
 	}
+	free(diffa);
 	return (1);
 }
 
@@ -61,6 +70,6 @@ int	get_max(int *stacka, int to_find)
 int	case_two_a(t_main *main)
 {
 	if (main->stacka->elem > main->stacka->n->elem)
-		s(&main->stacka);
+		send_op(main, "sa");
 	return (0);
 }

@@ -15,7 +15,7 @@ int	str_diff(char *s1, char *s2)
 	return (1);
 }
 
-void	send_op2(t_main *main, char *op)
+int	send_op2(t_main *main, char *op)
 {
 	if (str_diff(op, "rrr"))
 	{
@@ -27,6 +27,9 @@ void	send_op2(t_main *main, char *op)
 		r(&main->stackb);
 		r(&main->stacka);
 	}
+	else
+		return (0);
+	return (1);
 }
 
 void	send_op(t_main *main, char *op)
@@ -47,7 +50,9 @@ void	send_op(t_main *main, char *op)
 		rev_r(&main->stacka);
 	else if (str_diff(op, "rrb"))
 		rev_r(&main->stackb);
-	send_op2(main, op);
+	else if (!send_op2(main, op))
+		return ;
+	main->count++;
 	printf("%s\n", op);
 }
 

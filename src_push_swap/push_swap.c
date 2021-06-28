@@ -70,12 +70,11 @@ int	main(int argc, char **argv)
 		return (exit_push_swap(&main, "Error\n"));
 	main.stacka = NULL;
 	main.stackb = NULL;
+	main.count = 0;
 	if (len == 2 || len == 1)
 		return (case_two(stacka, len));
 	set_cutsize(&main, len);
 	if (!init_stack_sort(&main, stacka, len))
 		return (0);
-	if (main.stacka && (is_sorted(main.stacka) && main.stacka && !main.stackb))
-		printf("OK\n");
 	free_stack(&main);
 }

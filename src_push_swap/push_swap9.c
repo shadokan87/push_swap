@@ -61,8 +61,6 @@ int	to_a2_move_to_top(t_main *main, int to_find)
 	int	count_r;
 
 	count_r = 0;
-	if (main->chunks->elem >= 2 && main->stackb->n->elem == to_find)
-		send_op(main, "sb");
 	while (main->stackb->elem != to_find)
 	{
 		if (main->stackb->n->elem == to_find)

@@ -58,7 +58,7 @@ void	move_small(t_main *main, int *stacka, int mid)
 	{
 		while (!(main->stacka->elem < stacka[mid]))
 			send_op(main, "rra");
-	}
+	}	
 }
 
 int	to_b(t_main *main)
@@ -74,7 +74,7 @@ int	to_b(t_main *main)
 	stacka = stack_to_int(main->stacka, stack_len(main->stacka));
 	quicksort(stacka, 0, stack_len(main->stacka) - 1);
 	mid = stack_len(main->stacka) / 2;
-	while (mid > 10 && mid % 10 != 0)
+	while (main->cutsize && mid > 10 && mid % 10 != 0)
 		mid--;
 	max = get_max(stacka, stacka[mid]);
 	push(&main->chunks, max);

@@ -9,10 +9,10 @@
 
 typedef struct s_stack
 {
-	int					elem;
-	int					group;
-	struct s_stack		n;
-}				t_stack;
+	int				elem;
+	int				group;
+	struct s_stack	*n;
+}					t_stack;
 
 typedef struct s_main
 {	
@@ -21,6 +21,7 @@ typedef struct s_main
 	t_stack		*chunks;
 	t_stack		*chun2;
 	int			cutsize;
+	int			count;
 	char		*op;
 }				t_main;
 
@@ -32,8 +33,12 @@ typedef struct s_solve
 	int			swap;
 }				t_solve;
 
+int		set_ret(char **ret, int size, int negative);
+void	splitnorme(char ***tab, int i, int **arr);
+int		new_star_char(char ***str, size_t size);
+int		new_char(char **str, size_t size);
 int		str_diff(char	*s1, char *s2);
-void	send_op2(t_main *main, char *op);
+int		send_op2(t_main *main, char *op);
 void	send_op(t_main *main, char *op);
 int		*get_numbers(char **argv);
 void	swap(int *a, int *b);
