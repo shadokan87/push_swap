@@ -6,7 +6,7 @@
 /*   By: motoure <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/11 13:11:46 by motoure           #+#    #+#             */
-/*   Updated: 2021/06/28 20:57:21 by motoure          ###   ########.fr       */
+/*   Updated: 2021/06/29 09:13:53 by motoure          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ char	**ft_split(char const *s, char c)
 			y++;
 		i++;
 	}
-	free(words_len);
 	splitnorme(&tab, i, &words_len);
 	return (tab);
 }
