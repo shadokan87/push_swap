@@ -96,9 +96,9 @@ char	**ft_split(char const *s, char c)
 	char	**tab;
 	int		y;
 
-	if (!s || (!ewl(s, c)))
-		return (0);
 	words_len = ewl(s, c);
+	if (!s || !(words_len))
+		return (0);
 	i = 0;
 	y = 0;
 	if (!(new_star_char(&tab, sizeof(char *) * words_count(s, c) + 1)))

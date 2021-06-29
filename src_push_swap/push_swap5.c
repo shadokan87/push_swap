@@ -65,6 +65,7 @@ int	to_b(t_main *main)
 {
 	int		mid;
 	int		max;
+	int		orig;
 	int		*stacka;
 
 	if (stack_len(main->stacka) == 2 || !stack_len(main->stacka))
@@ -77,6 +78,7 @@ int	to_b(t_main *main)
 	while (main->cutsize && mid > 10 && mid % 10 != 0)
 		mid--;
 	max = get_max(stacka, stacka[mid]);
+	orig = max;
 	push(&main->chunks, max);
 	while (max)
 	{

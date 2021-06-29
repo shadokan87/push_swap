@@ -32,6 +32,7 @@ typedef struct s_solve
 	int			swap;
 }				t_solve;
 
+int		free_int(int *nb, int ret);
 int		ft_isdigit(int c);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_itoa(int n);

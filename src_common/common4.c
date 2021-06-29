@@ -40,12 +40,8 @@ int	is_var(char **argv)
 	while (split[i])
 		i++;
 	if (i == 1)
-	{
-		free_2dtab(&split, 0);
-		return (0);
-	}
-	free_2dtab(&split, 1);
-	return (1);
+		return (free_2dtab(&split, 0));
+	return (free_2dtab(&split, 1));
 }
 
 int	exit_push_swap(t_main *main, char *message)

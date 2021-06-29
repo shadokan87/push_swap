@@ -36,10 +36,10 @@ int	check_nonvar_format(int **stacka, int *argc, char **argv, int mode)
 		if (tmp)
 			free(tmp);
 		if (!check_part3(argv, nb, mode, i))
-			return (0);
+			return (free_int(nb, 0));
 		tmp = ft_itoa(ft_atoi(argv[i]));
 		if (!check_part4(tmp, argv, i))
-			return (0);
+			return (free_int(nb, 0));
 		nb[i - mode] = ft_atoi(argv[i]);
 		i++;
 	}
@@ -57,8 +57,8 @@ int	check_var_format(int **stacka, int *argc, char **argv)
 	new = ft_split(argv[1], ' ');
 	*argc = twodlen(new);
 	if (!check_nonvar_format(stacka, argc, new, 0))
-		return (0);
-	return (1);
+		return (free_2dtab(&new, 0));
+	return (free_2dtab(&new, 1));
 }
 
 int	check_format(int **stacka, int *argc, char **argv)

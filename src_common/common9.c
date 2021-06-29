@@ -28,14 +28,17 @@ int	new_star_char(char ***str, size_t size)
 	return (1);
 }
 
+int	free_int(int *nb, int ret)
+{
+	free(nb);
+	return (ret);
+}
+
 void	splitnorme(char ***tab, int i, int **arr)
 {
 	char	**tab2;
-	int		*ptr;
 
-	ptr = *arr;
 	tab2 = *tab;
 	tab2[i] = NULL;
-	*tab = tab2;
-	free(ptr);
+	free(*arr);
 }

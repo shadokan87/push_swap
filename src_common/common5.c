@@ -29,6 +29,7 @@ int	fill_stacka(int **stacka, int *nb, int len)
 		i++;
 	}
 	*stacka = ret;
+	free(nb);
 	return (1);
 }
 
